@@ -1,0 +1,49 @@
+<%- include('../partials/header', { title: catway ? 'Modifier un catway' : 'Nouveau catway' }) %>
+
+<nav class="dashboard-nav">
+  <a href="/dashboard">← Tableau de bord</a>
+  <a href="/dashboard/catways">Catways</a>
+  <a href="/dashboard/reservations">Réservations</a>
+  <a href="/dashboard/users">Utilisateurs</a>
+  <a href="/logout" class="logout">Déconnexion</a>
+</nav>
+
+<section class="page-card">
+  <h1><%= (catway && catway.catwayNumber) ? 'Modifier le catway n°' + catway.catwayNumber : 'Nouveau catway' %></h1>
+
+  <% if (error) { %>
+    <p class="alert"><%= error %></p>
+  <% } %>
+
+  <% const isEdit = catway && catway.catwayNumber; %>
+
+  <form
+    action="<%= isEdit ? '/dashboard/catways/' + catway.catwayNumber + '?_method=PUT' : '/dashboard/catways' %>"
+    method="POST"
+    class="form"
+  >
+    <label for="catwayNumber">Numéro</label>
+    <input
+      type="number"
+      id="catwayNumber"
+      name="catwayNumber"
+      value="<%= catway ? catway.catwayNumber : '' %>"
+      <%= isEdit ? 'readonly' : 'required' %>
+    >
+
+    <label for="catwayType">Type</label>
+    <select id="catwayType" name="catwayType" <%= isEdit ? 'disabled' : 'required' %>>
+      <option value="short" <%= catway && catway.catwayType === 'short' ? 'selected' : '' %>>short</option>
+      <option value="long" <%= catway && catway.catwayType === 'long' ? 'selected' : '' %>>long</option>
+    </select>
+
+    <label for="catwayState">État</label>
+    <textarea id="catwayState" name="catwayState" required><%= catway ? catway.catwayState : '' %></textarea>
+
+    <button type="submit"><%= isEdit ? 'Enregistrer' : 'Créer' %></button>
+  </form>
+
+  <p><a href="/dashboard/catways">← Retour à la liste</a></p>
+</section>
+
+<%- include('../partials/footer') %>
